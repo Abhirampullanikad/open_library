@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Library</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/img/open.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/user.css' %}"> 
+    
+</head>
+<style>
+    body {
+        overflow-x: hidden; /* Hides horizontal scrollbar */
+    }
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+    
+</style>
+<style>
+    /* Fixed-size video container */
+    .video-header {
+        width: 800px;
+        height: 400px;
+        margin: 20px auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* Video styling */
+    .video-header video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Optional overlay (remove if not needed) */
+    .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, transparent 100%);
+    }
+</style>
+<style>
+    /* Text-only styling */
+    .library-text {
+        font-family: cursive;
+        font-size: 50px;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        text-align: center;
+        margin: 2rem 0;
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        display: inline-block;
+        padding: 0 1rem;
+    }
+
+    .library-text::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 25%;
+        width: 50%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #fff3cd 50%, transparent 100%);
+        border-radius: 2px;
+    }
+
+    /* Optional container if needed */
+    .text-container {
+        width: 100%;
+        text-align: center;
+        padding: 3rem 0;
+    }
+</style>
+<style>
+    .quote-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+    
+    .quote-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .einstein-card {
+        background: linear-gradient(135deg, #fff1eb 0%, #c3cfe2 100%);
+        border-left: 5px solid #4b79cf;
+    }
+    
+    .coelho-card {
+        background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
+        border-left: 5px solid #ff7e5f;
+    }
+    
+    .keillor-card {
+        background: linear-gradient(135deg, #fff1eb 0%, #b2ebf2 100%);
+        border-left: 5px solid #4b79cf;
+    }
+    
+    .quote-icon {
+        font-size: 2.5rem;
+        opacity: 0.2;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+    
+    .author-name {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .author-name:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: currentColor;
+    }
+    
+    .quote-text {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        position: relative;
+        padding-left: 20px;
+    }
+    
+    .quote-text:before {
+        content: '"';
+        font-size: 4rem;
+        position: absolute;
+        left: -15px;
+        top: -15px;
+        opacity: 0.1;
+    }
+</style>
+<style>
+
+    .book-slider {
+        padding: 3rem 0;
+        background: linear-gradient(135deg, #fff1eb 0%,rgb(205, 228, 239) 100%);
+        border-radius:10px;
+        position: relative;
+    }
+    
+    .book-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        margin: 0 10px;
+        border: none;
+    }
+    
+    .book-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .book-cover {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+        transition: transform 0.5s ease;
+    }
+    
+    .book-card:hover .book-cover {
+        transform: scale(1.03);
+    }
+    
+    .book-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff6b6b;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 1;
+    }
+    
+    .book-body {
+        padding: 1.5rem;
+    }
+    
+    .book-title {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 3em;
+    }
+    
+    .book-author {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .book-price {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .book-rating {
+        color: #f8d64e;
+        margin-bottom: 1rem;
+    }
+    
+    .carousel-control-prev, 
+    .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .book-slider:hover .carousel-control-prev,
+    .book-slider:hover .carousel-control-next {
+        opacity: 1;
+    }
+    
+    .carousel-control-prev {
+        left: 20px;
+    }
+    
+    .carousel-control-next {
+        right: 20px;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .section-title {
+        font-weight: 700;
+        font-size: 1.8rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #4b79cf;
+    }
+    
+    @media (max-width: 768px) {
+        .book-cover {
+            height: 200px;
+        }
+        
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 30px;
+            height: 30px;
+        }
+    }
+</style>
+<style>
+
+
+
+    :root {
+        --launch-primary: #6c5ce7; /* Modern purple - change to your brand color */
+        --launch-secondary: #a29bfe; /* Lighter accent */
+      }
+    
+      .launch-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:rgb(168, 216, 233); /* Change to match your app bg */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+    
+      /* Dot Wave Animation */
+      .dot-wave {
+        display: flex;
+        gap: 8px;
+        height: 50px;
+        align-items: center;
+      }
+    
+      .dot-wave__dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--launch-primary);
+        animation: dot-wave-animation 1.4s ease-in-out infinite;
+      }
+    
+      .dot-wave__dot:nth-child(1) { animation-delay: 0s; }
+      .dot-wave__dot:nth-child(2) { animation-delay: 0.2s; }
+      .dot-wave__dot:nth-child(3) { animation-delay: 0.4s; }
+      .dot-wave__dot:nth-child(4) { animation-delay: 0.6s; }
+    
+      @keyframes dot-wave-animation {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-15px); background: var(--launch-secondary); }
+      }
+    
+      .launch-screen.fade-out {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+      }
+    
+</style>
+
+
+
+
+
+<body>
+
+
+
+    <!-- Launch Screen -->
+<div class="launch-screen" id="launchScreen">
+    <div class="dot-wave">
+      <div class="dot-wave__dot"></div>
+      <div class="dot-wave__dot"></div>
+      <div class="dot-wave__dot"></div>
+      <div class="dot-wave__dot"></div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-ol">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <img src="{% static 'assets/img/open.svg' %}" alt="Logo" width="200px" height="50px" class="d-inline-block align-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'userapp:list' %}">Browse</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'userapp:viewcart' %}">🛒</a></li>
+                </ul>
+                <div class="d-flex d-grid gap-2 d-md-flex">
+                    <form class="d-flex" role="search" method="get" action="{% url 'userapp:search' %}">
+                        <input class="form-control me-2" type="search" name='q' placeholder="Search" aria-label="Search"  value="{{ request.GET.q }}">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+    
+
+                    </form>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <form action="{% url 'Account:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-info me-md-2" type="submit">Logout</button>
+                        </form>
+                    </div>
+                </div>
+               
+            </div>
+           
+        </div>
+    </nav>
+
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div class="video-header">
+                    <video autoplay muted loop playsinline>
+                        <source src="{% static 'assets/video/vdeo1.mp4' %}" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+                    <div class="video-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="container py-5">
+        <div class="row">
+            
+            <div class="library-text " style="background-color:#fff3cd;">
+                <img src="{% static 'assets/img/ic.png' %}" class="text-center">Open library
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Force video play (for stricter browsers) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('video');
+            
+            // Attempt to play immediately
+            video.play().catch(e => {
+                // If autoplay fails, try again on first user interaction
+                document.body.addEventListener('click', function() {
+                    video.play();
+                }, { once: true });
+            });
+        });
+    </script>
+    
+    
+
+    <!-- Hero Section -->
+    <section>
+            <div class="container py-5">
+                <div class="row">
+                    <!-- Albert Einstein Quote -->
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="quote-card einstein-card p-4 h-100">
+                            <i class="bi bi-quote quote-icon"></i>
+                            <h3 class="author-name text-dark">Albert Einstein</h3>
+                            <p class="quote-text">
+                                The only thing that you absolutely have to know, is the location of the library.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Paulo Coelho Quote -->
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="quote-card coelho-card p-4 h-100">
+                            <i class="bi bi-quote quote-icon"></i>
+                            <h3 class="author-name text-dark">Paulo Coelho</h3>
+                            <p class="quote-text">
+                                ...when we strive to become better than we are, everything around us becomes better, too.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Garrison Keillor Quote -->
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="quote-card keillor-card p-4 h-100">
+                            <i class="bi bi-quote quote-icon"></i>
+                            <h3 class="author-name text-dark">Garrison Keillor</h3>
+                            <p class="quote-text">
+                                A book is a gift you can open again and again.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    {% block content %}
+
+      {% endblock %}
+
+      <!-- Best Seller Books Slider -->
+    <section class="book-slider">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Best Seller Books</h2>
+            </div>
+            
+            <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="row g-4">
+                            <!-- Book 1 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/rich.jpg' %}" class="book-cover" alt="Atomic Habits">
+                                        <span class="book-badge">#1 Bestseller</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Rich Dad Poor Dad</h3>
+                                        <p class="book-author">Robert.T Kiyosaki</p>
+                                       
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐️</i>
+                                            <span class="text-muted ms-2">5</span>
+                                        
+                                        <p class="book-price">₹512</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 2 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/T.jpg' %}" class="book-cover" alt="The Alchemist">
+                                        <span class="book-badge">Bestseller</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">The Alchemist</h3>
+                                        <p class="book-author">Paulo Coelho</p>
+                                       
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                           
+                                            <span class="text-muted ms-2">4.0</span>
+                                        
+                                        <p class="book-price">₹599</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 3 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card ">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/58293924.jpg' %}" class="book-cover" alt="Educated">
+                                        <span class="book-badge text-dark"> Dark fantasy </span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Book of Night </h3>
+                                        <p class="book-author">Holly Black</p>
+                                        
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐️</i>
+                                            <span class="text-muted ms-2">5.0</span>
+                                      
+                                        <p class="book-price">₹495</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 4 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/A.jpg' %}" class="book-cover" alt="The Midnight Library">
+                                        <span class="book-badge">Bestseller</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Aadujeevitham</h3>
+                                        <p class="book-author">Bannyamin</p>
+                                        
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐</i>
+                                            <i >⭐️</i>
+                                            <i >⭐️</i>
+
+
+                                            <span class="text-muted ms-2">6</span>
+                                    
+                                        <p class="book-price">₹399</p>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="row g-4">
+                            <!-- Book 5 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/th.jpg' %}" class="book-cover" alt="Thinking, Fast and Slow">
+                                        <span class="book-badge">Classic</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Thalamurakal</h3>
+                                        <p class="book-author">O.V Vijayan</p>
+                                        <i >⭐️</i>
+                                        <i >⭐️</i>
+                                        <i >⭐️</i>
+                                        <i >⭐️</i>
+
+                                            <span class="text-muted ms-2">4</span>
+                                        
+                                        <p class="book-price">₹150</p>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 6 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/img9.jpg' %}" class="book-cover" alt="The Psychology of Money">
+                                        <span class="book-badge">Popular</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Faebound</h3>
+                                        <p class="book-author">EL-Arifi</p>
+                                        <div class="book-rating">
+                                            <i >⭐️</i>
+                                            <i >⭐️</i>
+                                            <i >⭐️</i>
+                                            <i >⭐️</i>
+                                            <i >⭐️</i>
+                                            <i >⭐️</i>
+                                            <i class="bi bi-star"></i>
+                                            <span class="text-muted ms-2">6</span>
+                                        </div>
+                                        <p class="book-price">₹500</p>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="book-card">
+                                        <div class="position-relative">
+                                            <img src="{% static 'assets/img/y.jpg' %}" class="book-cover" alt="The Psychology of Money">
+                                            <span class="book-badge">Popular</span>
+                                        </div>
+                                        <div class="book-body">
+                                            <h3 class="h5 book-title">Yellow Light of Beath</h3>
+                                            <p class="book-author">Bennyamin</p>
+                                            <div class="book-rating">
+                                                <i >⭐️</i>
+                                                <i >⭐️</i>
+                                                <i >⭐️</i>
+                                                <i >⭐️</i>
+                                                <i >⭐️</i>
+                                
+                                                <i class="bi bi-star"></i>
+                                                <span class="text-muted ms-2">6</span>
+                                            </div>
+                                            <p class="book-price">₹500</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                            
+        
+                
+            
+        </div>
+    </section>
+
+
+
+    <!-- Trending Books -->
+    <section class="py-5">
+        <div class="container" style="background-color:#fff3cd;">
+            <h2 class="mb-4">Trending Books</h2>
+            <div class="books-container position-relative">
+                <div class="books-row" id="booksRow">
+                    <!-- Book 1 -->
+                    {% for book in books %}
+                    <div class="book-col">
+                        <div class="card book-card">
+                            <div class="position-relative">
+                                <img src="{{ book.image.url }}" class="card-img-top book-cover" alt="{{ book.title }}">
+                                {% if book.book_available is True %}
+                                <span class="badge bg-success status-badge">Available</span>
+                                {% else %}
+                                <span class="badge bg-danger status-badge">Out of Stock</span>
+                                {% endif %}
+
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">{{ book.title }}</h6>
+                                <p class="card-text small text-muted">{{ book.author }}</p>
+                                <div class='container'>
+                                    <a href="{% url 'userapp:addtocart' book.id %}" class="btn btn-outline-info ">Add to cart</a>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <a href="{% url 'userapp:details' book_id=book.id %}" style='position:absolute; bottom:5px; left:0;' class="btn btn-sm btn-primary w-100">
+                                      View Details
+                                    </a>
+                                 </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    
+                </div>
+                
+                <button class="nav-btn prev-btn disabled" id="prevBtn">❮</button>
+                <button class="nav-btn next-btn" id="nextBtn">❯</button>
+            </div>
+        </div>
+    </section>
+
+
+
+    <div class="inline-gallery" style="width:100%;overflow:hidden;position:relative; bottom:10px;left:10px;">
+        <div class="gallery-track" style="display:flex;">
+        
+          <img src="{% static "assets/img/img7.jpg" %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/image2.webp' %}" style="min-width:50px; border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/img1.webp' %}" style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/41i2576lMAL._SL500_.webp' %}" style="min-width:50px;border-radius:10px;  object-fit:cover;">
+          <img src="{% static 'assets/img/58293924.jpg' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/img8.webp' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/img9.jpg' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/22926602.jpg' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/img11.webp' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/img12.webp' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/13.jpg' %}"  style="min-width:50px;border-radius:10px; object-fit:cover;">
+          <img src="{% static 'assets/img/14.jpg' %}"  style="min-width:10px;border-radius:10px; object-fit:cover;">
+
+
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+      
+      
+   
+
+
+
+
+
+    <!--footer-->
+    <div>
+    </div>
+
+    <footer>
+        <div class="container"  style="background-color: #fff3cd ;width: auto; border-radius: 0%;">
+            <div class="row">
+                <div class="col-md-3 footer-links">
+                    <h5>About</h5>
+                    <a >Created by</a>
+                    <a >Abhiram</a>
+                    <a href="www.linkedin.com/in/abhiram-p-29369b314">Linkdin</a><br>
+                    <a href="#">abhiramppullanikad23@gmail.com</a>
+                </div>
+                <div class="col-md-3 footer-links">
+                    <h5>Help</h5>
+                    <a href="#">Help Center</a>
+                    <a href="#">Tutorials</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Community</a>
+                </div>
+                <div class="col-md-3 footer-links">
+                    <h5>Legal</h5>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Cookie Policy</a>
+                    <a href="#">DMCA</a>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="text-white mb-4">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <div class="mt-4">
+                        <p>Subscribe to our newsletter</p>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Your email">
+                            <button class="btn btn-success" type="button">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center copyright">
+                    <p>© 2025 Open Library. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script>
+    window.addEventListener('load', function() {
+        // Show for minimum 1.5 seconds (adjust as needed)
+        setTimeout(() => {
+          const launchScreen = document.getElementById('launchScreen');
+          
+          // Add fade-out class
+          launchScreen.classList.add('fade-out');
+          
+          // Remove after animation completes
+          setTimeout(() => {
+            launchScreen.remove();
+          }, 600); // Must match CSS transition time
+        }, 1500);
+      });
+    
+      // Optional: Force remove after max 4 seconds if something fails
+      setTimeout(() => {
+        const launchScreen = document.getElementById('launchScreen');
+        if (launchScreen) launchScreen.remove();
+      }, 4000);
+    
+</script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'assets/js/users.js' %}"></script>
+
+</body>
+</html>

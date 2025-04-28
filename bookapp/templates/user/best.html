@@ -1,0 +1,311 @@
+{% extends 'user/userinterface.html' %}
+{% load static %}
+
+{% block content %}
+        .book-slider {
+            padding: 3rem 0;
+            background: #f8f9fa;
+            position: relative;
+        }
+        
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            margin: 0 10px;
+            border: none;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .book-cover {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .book-card:hover .book-cover {
+            transform: scale(1.03);
+        }
+        
+        .book-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+        
+        .book-body {
+            padding: 1.5rem;
+        }
+        
+        .book-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 3em;
+        }
+        
+        .book-author {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .book-price {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .book-rating {
+            color: #f8d64e;
+            margin-bottom: 1rem;
+        }
+        
+        .carousel-control-prev, 
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .book-slider:hover .carousel-control-prev,
+        .book-slider:hover .carousel-control-next {
+            opacity: 1;
+        }
+        
+        .carousel-control-prev {
+            left: 20px;
+        }
+        
+        .carousel-control-next {
+            right: 20px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #4b79cf;
+        }
+        
+        @media (max-width: 768px) {
+            .book-cover {
+                height: 200px;
+            }
+            
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+<body>
+    <!-- Best Seller Books Slider -->
+    <section class="book-slider">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Best Seller Books</h2>
+            </div>
+            
+            <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="row g-4">
+                            <!-- Book 1 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/rich.jpg' %}" class="book-cover" alt="Atomic Habits">
+                                        <span class="book-badge">#1 Bestseller</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Rich Dad Poor Dad</h3>
+                                        <p class="book-author">Robert.T Kiyosaki</p>
+                                        <div class="book-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                            <span class="text-muted ms-2">4.5</span>
+                                        </div>
+                                        <p class="book-price">₹512</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 2 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/T.jpg' %}" class="book-cover" alt="The Alchemist">
+                                        <span class="book-badge">Bestseller</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">The Alchemist</h3>
+                                        <p class="book-author">Paulo Coelho</p>
+                                        <div class="book-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star"></i>
+                                            <span class="text-muted ms-2">4.0</span>
+                                        </div>
+                                        <p class="book-price">₹599</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 3 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card ">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/58293924.jpg' %}" class="book-cover" alt="Educated">
+                                        <span class="book-badge text-dark"> Dark fantasy </span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Book of Night </h3>
+                                        <p class="book-author">Holly Black</p>
+                                        <div class="book-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <span class="text-muted ms-2">5.0</span>
+                                        </div>
+                                        <p class="book-price">₹495</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 4 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/T.jpg' %}" class="book-cover" alt="The Midnight Library">
+                                        <span class="book-badge">Bestseller</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Aadujeevitham</h3>
+                                        <p class="book-author">Bannyamin</p>
+                                        <div class="book-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                            <span class="text-muted ms-2">4.5</span>
+                                        </div>
+                                        <p class="book-price">₹399</p>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="row g-4">
+                            <!-- Book 5 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="https://m.media-amazon.com/images/I/71aLultW5EL._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Thinking, Fast and Slow">
+                                        <span class="book-badge">Classic</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Thinking, Fast and Slow</h3>
+                                        <p class="book-author">Daniel Kahneman</p>
+                                        <div class="book-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <span class="text-muted ms-2">4.7</span>
+                                        </div>
+                                        <p class="book-price">$11.99</p>
+                                        <button class="btn btn-sm btn-primary w-100">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Book 6 -->
+                            <div class="col-md-3 col-6">
+                                <div class="book-card">
+                                    <div class="position-relative">
+                                        <img src="{% static 'assets/img/img9.jpg' %}" class="book-cover" alt="The Psychology of Money">
+                                        <span class="book-badge">Popular</span>
+                                    </div>
+                                    <div class="book-body">
+                                        <h3 class="h5 book-title">Faebound</h3>
+                                        <p class="book-author">EL-Arifi</p>
+                                        <div class="book-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star"></i>
+                                            <span class="text-muted ms-2">4.6</span>
+                                        </div>
+                                        <p class="book-price">₹500</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+        
+                
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

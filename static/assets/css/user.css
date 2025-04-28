@@ -1,0 +1,127 @@
+:root {
+    --ol-green: #5ca941;
+    --ol-light: #f8f9fa;
+}
+.navbar-ol {
+    background-color: #fff3cd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+   
+}
+.hero-section {
+    background-color: var(--ol-light);
+    padding: 3rem 0;
+}
+.book-card {
+    height: 100%;
+    transition: transform 0.3s;
+   
+}
+.book-card:hover {
+    transform: translateY(-5px);
+}
+.book-cover {
+    height: 200px;
+    object-fit: contain;
+    background-color: #eee;
+}
+.status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.8rem;
+}
+.books-container {
+    position: relative;
+    overflow: hidden;
+   
+}
+.books-row {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+.book-col {
+    min-width: 20%; /* 6 books per row (100/6) */
+    padding: 0 10px;
+}
+.nav-btn {
+    position:absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    z-index: 10;
+
+}
+.prev-btn {
+    left: 10px;
+}
+.next-btn {
+    right: 10px;
+}
+.nav-btn:hover {
+    background: rgba(0,0,0,0.8);
+}
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+
+
+
+
+
+
+
+  :root {
+    --launch-primary: #6c5ce7; /* Modern purple - change to your brand color */
+    --launch-secondary: #a29bfe; /* Lighter accent */
+  }
+
+  .launch-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff; /* Change to match your app bg */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  /* Dot Wave Animation */
+  .dot-wave {
+    display: flex;
+    gap: 8px;
+    height: 50px;
+    align-items: center;
+  }
+
+  .dot-wave__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--launch-primary);
+    animation: dot-wave-animation 1.4s ease-in-out infinite;
+  }
+
+  .dot-wave__dot:nth-child(1) { animation-delay: 0s; }
+  .dot-wave__dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot-wave__dot:nth-child(3) { animation-delay: 0.4s; }
+  .dot-wave__dot:nth-child(4) { animation-delay: 0.6s; }
+
+  @keyframes dot-wave-animation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-15px); background: var(--launch-secondary); }
+  }
+
+  .launch-screen.fade-out {
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+  }

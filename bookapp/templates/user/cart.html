@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Library Cart | Open Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/user.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .library-header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .library-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .cart-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 25px;
+        }
+        
+        .cart-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #343a40;
+        }
+        
+        .cart-items {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .cart-items th {
+            text-align: left;
+            padding: 12px 10px;
+            background-color: #f1f3f5;
+            border-bottom: 1px solid #eee;
+            color: #495057;
+        }
+        
+        .cart-items td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .book-info {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .book-cover {
+            width: 60px;
+            height: 90px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .book-details h3 {
+            margin: 0 0 5px 0;
+            color: #212529;
+        }
+        
+        .book-details p {
+            margin: 3px 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        
+        
+        .availability {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .available {
+            background-color: #ebfbee;
+            color: #2b8a3e;
+        }
+        
+        .waitlist {
+            background-color: #fff3bf;
+            color: #e67700;
+        }
+        
+        .remove-btn {
+            color: #fa5252;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+        
+        .cart-summary {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .summary-box {
+            width: 100%;
+            max-width: 350px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .total-row {
+            font-weight: bold;
+            font-size: 17px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #228be6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background: #1c7ed6;
+        }
+        
+        .continue-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            transition: background 0.3s;
+        }
+        
+        .continue-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 40px 0;
+            color: #6c757d;
+        }
+        
+        .empty-cart-icon {
+            font-size: 50px;
+            color: #ced4da;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .cart-items thead {
+                display: none;
+            }
+            
+            .cart-items tr {
+                display: block;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #eee;
+            }
+            
+            .cart-items td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                border-bottom: none;
+            }
+            
+            .cart-items td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 10px;
+                color: #495057;
+            }
+            
+            .book-info {
+                flex-direction: column;
+            }
+            
+            .book-cover {
+                margin-bottom: 10px;
+            }
+            
+            .cart-summary {
+                justify-content: center;
+            }
+            
+            .summary-box {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-ol " style='background-color: #fff3cd;'>
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <img src="{% static 'assets/img/open.svg' %}" alt="Logo" width="200px" height="50px" class="d-inline-block align-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'userapp:list' %}">My Books</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Browse</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">AllSearch</a></li>
+                </ul>
+                <div class="d-flex d-grid gap-2 d-md-flex">
+                    <form class="d-flex" role="search" method="get" action="{% url 'userapp:search' %}">
+                        <input class="form-control me-2" type="search" name='q' placeholder="Search" aria-label="Search"  value="{{ request.GET.q }}">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <form action="{% url 'Account:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-info me-md-2" type="submit">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    {% if not cart_items %}
+    <div class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Browse our collection to find your next read</p>
+        <a href="{% url 'userapp:list' %}" class="continue-btn">Browse Books</a>
+    </div>
+    {% else %}
+    <div class="library-container">
+        <div class="cart-container">
+            <div class="cart-header">
+                <h1>Your Library Cart</h1>
+                <a href="{% url 'userapp:list' %}" class="continue-btn">Continue Browsing</a>
+            </div>
+            
+            <table class="cart-items">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Availability</th>
+                       
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td data-label="Book">
+                            <div class="book-info">
+                                <img src="{{ item.book.image.url }}" class="book-cover" alt="{{ item.book.title }}">
+                                <div class="book-details">
+                                    <h3>{{ item.book.title }}</h3>
+                                    <p>{{ item.book.author }}</p>
+                                    <p>₹{{ item.book.price }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Availability">
+                            {% if item.book.book_available %}
+                            <span class="badge bg-success">Available</span>
+                            {% else %}
+                            <span class="badge bg-danger">Out of Stock</span>
+                            {% endif %}
+                        
+                        <td data-label="Quantity">
+                            <div class="quantity-controls">
+                                {% if item.quantity <= item.book.quantity %}
+                                <a href="{% url 'userapp:decrease_quantity' item.id %}" class="btn btn-sm btn-outline-secondary">-</a>
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.book.quantity }}" class="quantity-input">
+                                <a href="{% url 'userapp:increase_quantity' item.id %}" class="btn btn-sm btn-outline-secondary">+</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td data-label="Actions">
+                            <a href="{% url 'userapp:remove_cart' item.id %}" class='remove-btn'>Remove</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="cart-summary">
+                <div class="summary-box">
+                    <h3>Cart Summary</h3>
+                    <div class="summary-row">
+                        <span>Books in cart</span>
+                        <span>{{ total_items }}</span>
+                    </div>
+                    <div class="summary-row">
+                        
+                        <span>Avail now</span>
+                      
+    
+                        
+                       
+                    </div>
+                    
+                    <div class="summary-row total-row">
+                        <span>Total price</span>
+                        <span>₹{{ total_price }}</span>
+                    </div>
+                    <form action="{% url 'userapp:create-checkout-session' %}" method='post'>
+                        {% csrf_token %}
+                        
+                           <button class="checkout-btn">Checkout Selected Items</button>
+                    
+                    <p style="font-size: 12px; color: #6c757d; margin-top: 10px;">
+                        Note:Out of Stock items will be available soon
+                    </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>

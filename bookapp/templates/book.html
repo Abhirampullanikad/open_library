@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Create Book</h1>
+
+  <p><a href="{% url 'author' %}"><button type="button" class="btn btn-warning">Add Author</button></a></p>
+
+  <form action="" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

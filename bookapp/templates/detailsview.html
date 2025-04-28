@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+    <h1>Book Details</h1>
+
+    <div class='card' style='width:18rem;'>
+        <img src="{{ book.image.url }}" class='card-img-top' alt="...">
+        <div class="card-body">
+            <p class="card-text"><b>{{book.title }}</b></p>
+                <p><b>{{ book.price }}</b></p>
+                <p>{{ book.description }}</p>
+                {% if object.book_available is True %}
+                <a href="{% url 'checkout' object.pk %}" class="btn btn-outline-success" role="button">Buy Now</a>
+                {% else %}
+                <h4 class="text-danger">Out of Stock !</h4>
+                {% endif %}
+                
+        </div>
+    </div>
+
+
+
+  
+
+
+
+
+{% endblock %}

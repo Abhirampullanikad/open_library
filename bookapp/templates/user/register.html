@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Register | Your App Name</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #2e59d9;
+            --accent-color: #f8f9fc;
+            --text-color: #5a5c69;
+        }
+        
+        body {
+            background-color: var(--accent-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .register-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .register-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-bottom: none;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+        }
+        
+        .form-control {
+            border-radius: 0.35rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d3e2;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-register {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 0.35rem;
+            padding: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn-register:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .footer-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .footer-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-link a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+        .password-strength {
+            height: 3px;
+            background: #e9ecef;
+            margin-top: 0.5rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card register-card animate__animated animate__fadeIn">
+                    <div class="card-header">
+                        <h2 class="mb-1">Create Your Account</h2>
+                        
+                    </div>
+                    <div class="card-body">
+                        <form id="registrationForm" action="" method='post'>
+                            {% csrf_token %}
+                            
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__shakeX">
+                                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <div class="mb-4">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="username"
+                                           name="username" 
+                                           placeholder="Enter your username" 
+                                           required>
+                                    <span class="input-group-text bg-transparent"><i class="fas fa-user"></i></span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" 
+                                           class="form-control" 
+                                           id="password"
+                                           name="password" 
+                                           placeholder="Create a password" 
+                                           required
+                                           oninput="checkPasswordStrength(this.value)">
+                                    <span class="password-toggle" onclick="togglePassword('password')">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+                               
+                                
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password1" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <input type="password" 
+                                           class="form-control" 
+                                           id="password1"
+                                           name="password1" 
+                                           placeholder="Confirm your password" 
+                                           required
+                                           oninput="checkPasswordMatch()">
+                                    <span class="password-toggle" onclick="togglePassword('password1')">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+                                <small id="password-match-feedback" class="d-block mt-1"></small>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-register py-2">
+                                    <i class="fas fa-user-plus me-2"></i> Register
+                                </button>
+                            </div>
+                            
+                            <div class="footer-link">
+                                <p class="mb-0">Already have an account? 
+                                    <a href="{% url 'Account:login' %}">Login here</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling.querySelector('i');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+        
+        // Check password strength
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('password-strength-bar');
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 15;
+            
+            // Character type checks
+            if (/[A-Z]/.test(password)) strength += 15;
+            if (/[0-9]/.test(password)) strength += 15;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+            
+            // Duplicate character penalty
+            if (/(.)\1/.test(password)) strength -= 10;
+            
+            // Update strength bar
+            strength = Math.max(0, Math.min(100, strength));
+            strengthBar.style.width = strength + '%';
+            
+            // Update color
+            if (strength < 40) {
+                strengthBar.style.backgroundColor = '#dc3545';
+            } else if (strength < 70) {
+                strengthBar.style.backgroundColor = '#fd7e14';
+            } else {
+                strengthBar.style.backgroundColor = '#28a745';
+            }
+        }
+        
+        // Check password match
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password1').value;
+            const feedback = document.getElementById('password-match-feedback');
+            
+            if (confirmPassword.length === 0) {
+                feedback.textContent = '';
+                feedback.style.color = '';
+            } else if (password === confirmPassword) {
+                feedback.textContent = '✓ Passwords match';
+                feedback.style.color = '#28a745';
+            } else {
+                feedback.textContent = '✗ Passwords do not match';
+                feedback.style.color = '#dc3545';
+            }
+        }
+        
+        // Form submission alert
+        function showAlert() {
+            alert('Registration submitted!');
+        }
+    </script>
+</body>
+</html>
