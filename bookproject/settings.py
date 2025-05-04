@@ -131,3 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ##STRIPE_PUBLISHABLE_KEY='pk_test_51RGIOvP6xOJr3xTMEuPIwSZPv9JljxubxT9bpA0d9RTHhNnvKYD82sx9Q9jnLsOgy4Ulakt8J0mEV8uTJYfqeo9h00RzMPZf9v'
 ##STRIPE_SECRET_KEY='sk_test_51RGIOvP6xOJr3xTMF7dhl4Npv8z5NwPKNLwUs1ZjY5DwICr79QbSgPFtObtBZIurFgoqWzJWYyYvMy7MmJ68SEzK00RYMzE0IP'
+CSRF_TRUSTED_ORIGINS = [
+    'https://open-library-xaox.onrender.com',
+]
